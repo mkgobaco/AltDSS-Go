@@ -96,4 +96,7 @@ func example() {
 	busName, err = dss.ActiveCircuit.ActiveBus.Name()
 	println("Active Bus:", busName, "number", busNum)
 
+	dss.ClearAll()
+	dss2.ClearAll()
+
 }
