@@ -2,11 +2,33 @@ package main
 
 import (
 	"log"
+	"runtime"
+
+	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/dss-extensions/altdss-go/altdss"
 )
 
+func printNop(p ...interface{}) {
+
+}
+
 func main() {
+
+	// we need a webserver to get the pprof webserver
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+
+	for {
+		example()
+		runtime.GC()
+	}
+
+}
+
+func example() {
 	dss := altdss.IDSS{}
 	dss.Init(nil)
 	err := dss.Text.Set_Command("redirect ../electricdss-tst/Version8/Distrib/IEEETestCases/13Bus/IEEE13Nodeckt.dss")
@@ -33,7 +55,7 @@ func main() {
 	}
 
 	for i := 0; i < len(names); i++ {
-		println(i, names[i], vmag[i]/1000, cvolts[i])
+		printNop(i, names[i], vmag[i]/1000, cvolts[i])
 	}
 	dss2, err := dss.NewContext()
 	if err != nil {
